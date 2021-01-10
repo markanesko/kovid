@@ -10,11 +10,7 @@ public class Child extends Person{
     private static final int LOW = 0;
     private static final int HIGH = 18;
 
-    public Child(String uuid, String name, String lastName, Date birthDate, Gender gender, String houseUuid) {
-        super(uuid, name, lastName, birthDate, gender, houseUuid);
-
-        // calculate date with - radnom (0, 18)
-
+    public Child(String uuid, Name fullName, Date birthDate, Gender gender, String houseUuid, Double temperature) {
+        super(uuid, fullName, birthDate, gender, houseUuid, temperature);
     }
-
 }

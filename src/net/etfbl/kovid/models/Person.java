@@ -7,23 +7,19 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Person implements Serializable {
     private String uuid;
-    private String name;
-    private String lastName;
+    private Name fullName;
     private Date birthDate;
     private Gender gender;
     private String houseUuid;
     private Double temperature;
 
-    public Person(String uuid, String name, String lastName, Date birthDate, Gender gender, String houseUuid) {
+    public Person(String uuid, Name fullName, Date birthDate, Gender gender, String houseUuid, Double temperature) {
         this.uuid = uuid;
-        this.name = name;
-        this.lastName = lastName;
+        this.fullName = fullName;
         this.birthDate = birthDate;
         this.gender = gender;
         this.houseUuid = houseUuid;
-
-        this.temperature = initTemperature();
-
+        this.temperature = temperature;
     }
 
     protected static Double initTemperature() {
@@ -46,20 +42,12 @@ public abstract class Person implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getName() {
-        return name;
+    public Name getFullName() {
+        return fullName;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setFullName(Name fullName) {
+        this.fullName = fullName;
     }
 
     public Date getBirthDate() {
@@ -91,23 +79,23 @@ public abstract class Person implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return uuid.equals(person.uuid) && name.equals(person.name) && lastName.equals(person.lastName) && birthDate.equals(person.birthDate) && gender == person.gender && houseUuid.equals(person.houseUuid);
+        return uuid.equals(person.uuid) && fullName.equals(person.fullName) && birthDate.equals(person.birthDate) && gender == person.gender && houseUuid.equals(person.houseUuid) && temperature.equals(person.temperature);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, name, lastName, birthDate, gender, houseUuid);
+        return Objects.hash(uuid, fullName, birthDate, gender, houseUuid, temperature);
     }
 
     @Override
     public String toString() {
         return "Person{" +
                 "uuid='" + uuid + '\'' +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", fullName=" + fullName +
                 ", birthDate=" + birthDate +
                 ", gender=" + gender +
                 ", houseUuid='" + houseUuid + '\'' +
+                ", temperature=" + temperature +
                 '}';
     }
 }
