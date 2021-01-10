@@ -42,12 +42,14 @@ public class StartController implements Initializable{
                     Integer.parseInt(elderInput.getText()), Integer.parseInt(houseInput.getText()),
                     Integer.parseInt(controlInput.getText()), Integer.parseInt(ambulanceInput.getText())
             );
+            CitySingleton instance = CitySingleton.getInstance();
+            instance.setCity(city);
 
-            System.out.println(city);
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setTitle("My New Stage Title");
-            stage.setUserData(city);
+//            stage.setUserData(city);
+
             stage.setScene(scene);
             stage.show();
             // Hide this current window (if this is what you want)

@@ -1,11 +1,15 @@
 package net.etfbl.kovid.controllers;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 import net.etfbl.kovid.models.City;
 
-public class MainFormController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MainFormController implements Initializable {
     public void startMoving(ActionEvent actionEvent) {
 
         Node node = (Node) actionEvent.getSource();
@@ -37,5 +41,12 @@ public class MainFormController {
 
     public void closeSimulation(ActionEvent actionEvent) {
 
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        CitySingleton instance = CitySingleton.getInstance();
+        City city = instance.getCity();
+        System.out.println("inside main form: " + city);
     }
 }
