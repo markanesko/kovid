@@ -1,12 +1,9 @@
 package net.etfbl.kovid.models;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Scanner;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class City implements Serializable {
@@ -24,6 +21,13 @@ public class City implements Serializable {
 
     private HashMap<Coord, CityItem> cityMatrix;
 
+    private ArrayList<House> houseList;
+    private ArrayList<Child> childrenList;
+    private ArrayList<Adult> adultList;
+    private ArrayList<Elder> elderList;
+    // control
+    // ambulance
+
     public City(Integer numChildren, Integer numAdults, Integer numElders, Integer numHouses, Integer numControlPoints, Integer numAmbulanceVehicles) {
         this.numChildren = numChildren;
         this.numAdults = numAdults;
@@ -35,8 +39,14 @@ public class City implements Serializable {
         width = height = ThreadLocalRandom.current().nextInt(LOW, HIGH);
         System.out.println(width);
 
+        this.houseList = new ArrayList<>();
+        this.childrenList = new ArrayList<>();
+        this.adultList = new ArrayList<>();
+        this.elderList = new ArrayList<>();
+
         this.initCityMatrix();
         this.populateCityMatrix();
+
 
 
     }
@@ -52,52 +62,83 @@ public class City implements Serializable {
     }
 
     private void populateCityMatrix() {
+        this.generateHouses();
+        this.generateControlPoints();
+        this.generateElders();
+        this.generateAdults();
+        this.generateChildren();
+    }
+
+    private void generateHouses() {
         for (int i = 0; i < this.numHouses; i++) {
             Coord houseCoord = Coord.getRegularCoord(width);
             while (this.cityMatrix.get(houseCoord).isOccupied()){
                 houseCoord = Coord.getRegularCoord(width);
             }
-            this.cityMatrix.replace(houseCoord, new CityItem(new House(), true));
-            System.out.println("house coordinate: " + houseCoord);
-
-            System.out.println(generateUuid());
-        }
-
-
-    }
-
-    private static String choose(File f) throws FileNotFoundException
-    {
-        String result = null;
-        int n = 0;
-        for(Scanner sc = new Scanner(f); sc.hasNext(); )
-        {
-            ++n;
-            String line = sc.nextLine();
-            if(ThreadLocalRandom.current().nextInt(n) == 0)
-                result = line;
-        }
-
-        return result;
-    }
-
-    private static Name generateFullName() {
-        try {
-            String firstName = choose(new File("/home/markanesko/projects/github.com/kovidsiti/src/net/etfbl/kovid/resources/names/firstNames.txt"));
-            String lastName = choose(new File("/home/markanesko/projects/github.com/kovidsiti/src/net/etfbl/kovid/resources/names/lastNames.txt"));
-
-            return new Name(firstName, lastName);
-
-        } catch (FileNotFoundException e) {
-            System.out.println("exception" + e);
-            return new Name("", "");
+            House newHouse = new House(houseCoord);
+            this.houseList.add(newHouse);
+            this.cityMatrix.replace(houseCoord, new CityItem(newHouse, true));
         }
     }
 
-    private static String generateUuid() {
-        return UUID.randomUUID().toString().replace("-", "");
+    private void generateControlPoints() {
+        for (int i = 0; i < this.numControlPoints; i++) {
+            Coord controlCoord ;
+            do {
+                controlCoord = Coord.getRegularCoord(width);
+            } while (this.cityMatrix.get(controlCoord).isOccupied());
+
+            // add control point class
+        }
     }
 
+    private void generateElders() {
+        for (int i = 0; i < this.numElders; i++) {
+            Coord elderCoord;
+            do {
+                elderCoord = Coord.getRegularCoord(width);
+            } while (this.cityMatrix.get(elderCoord).isOccupied());
+
+            House randomHouse = this.houseList.get(ThreadLocalRandom.current().nextInt(0, this.houseList.size()));
+            Elder newElder = new Elder(randomHouse.getUuid());
+            randomHouse.addResident(newElder);
+            this.cityMatrix.replace(elderCoord, new CityItem(newElder, true));
+        }
+    }
+
+    private void generateAdults(){
+        for (int i = 0; i < this.numAdults; i++) {
+            Coord adultCoord;
+            do {
+                adultCoord = Coord.getRegularCoord(width);
+            } while (this.cityMatrix.get(adultCoord).isOccupied());
+
+
+            House randomHouse = this.houseList.get(ThreadLocalRandom.current().nextInt(0, this.houseList.size()));
+            Adult newAdult = new Adult(randomHouse.getUuid());
+            randomHouse.addResident(newAdult);
+            randomHouse.setContainsAdult(true);
+            this.cityMatrix.replace(adultCoord, new CityItem(newAdult, true));
+        }
+    }
+
+    private void generateChildren() {
+        for (int i = 0; i < this.numAdults; i++) {
+            Coord childCoord;
+            do{
+                childCoord = Coord.getRegularCoord(width);
+            } while (this.cityMatrix.get(childCoord).isOccupied());
+            House randomHouse;
+            do {
+                randomHouse = this.houseList.get(ThreadLocalRandom.current().nextInt(0, this.houseList.size()));
+            } while (!randomHouse.isContainsAdult());
+
+            Child newChild = new Child(randomHouse.getUuid());
+            randomHouse.addResident(newChild);
+            this.cityMatrix.replace(childCoord, new CityItem(newChild, true));
+
+        }
+    }
 
     public Integer getNumChildren() {
         return numChildren;
