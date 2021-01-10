@@ -1,8 +1,12 @@
 package net.etfbl.kovid.models;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class City implements Serializable {
@@ -54,9 +58,46 @@ public class City implements Serializable {
                 houseCoord = Coord.getRegularCoord(width);
             }
             this.cityMatrix.replace(houseCoord, new CityItem(new House(), true));
+            System.out.println("house coordinate: " + houseCoord);
+
+            System.out.println(generateUuid());
         }
 
+
     }
+
+    private static String choose(File f) throws FileNotFoundException
+    {
+        String result = null;
+        int n = 0;
+        for(Scanner sc = new Scanner(f); sc.hasNext(); )
+        {
+            ++n;
+            String line = sc.nextLine();
+            if(ThreadLocalRandom.current().nextInt(n) == 0)
+                result = line;
+        }
+
+        return result;
+    }
+
+    private static Name generateFullName() {
+        try {
+            String firstName = choose(new File("/home/markanesko/projects/github.com/kovidsiti/src/net/etfbl/kovid/resources/names/firstNames.txt"));
+            String lastName = choose(new File("/home/markanesko/projects/github.com/kovidsiti/src/net/etfbl/kovid/resources/names/lastNames.txt"));
+
+            return new Name(firstName, lastName);
+
+        } catch (FileNotFoundException e) {
+            System.out.println("exception" + e);
+            return new Name("", "");
+        }
+    }
+
+    private static String generateUuid() {
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
 
     public Integer getNumChildren() {
         return numChildren;
