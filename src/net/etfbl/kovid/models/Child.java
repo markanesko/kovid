@@ -10,7 +10,11 @@ public class Child extends Person{
     private static final int LOW = 0;
     private static final int HIGH = 18;
 
-    public Child(String uuid, Name fullName, Date birthDate, Gender gender, String houseUuid, Double temperature) {
-        super(uuid, fullName, birthDate, gender, houseUuid, temperature);
+    public Child(String uuid, Name fullName, Date birthDate, Gender gender, String houseUuid) {
+        super(uuid, fullName, birthDate, gender, houseUuid);
+    }
+
+    public Child(String houseUuid) {
+        super(houseUuid);
     }
 }

@@ -1,5 +1,7 @@
 package net.etfbl.kovid.models;
 
+import net.etfbl.kovid.util.Generator;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
@@ -13,13 +15,32 @@ public abstract class Person implements Serializable {
     private String houseUuid;
     private Double temperature;
 
-    public Person(String uuid, Name fullName, Date birthDate, Gender gender, String houseUuid, Double temperature) {
+    public Person(String uuid, Name fullName, Date birthDate, Gender gender, String houseUuid) {
         this.uuid = uuid;
         this.fullName = fullName;
         this.birthDate = birthDate;
         this.gender = gender;
         this.houseUuid = houseUuid;
-        this.temperature = temperature;
+        this.temperature = initTemperature();
+    }
+
+    public Person(String houseUuid) {
+        this.houseUuid = houseUuid;
+
+        this.uuid = Generator.generateUuid();
+        this.fullName = Generator.generateName();
+        this.gender = initGender();
+        this.temperature = initTemperature();
+
+
+    }
+
+    protected static Gender initGender() {
+        if (ThreadLocalRandom.current().nextBoolean()){
+            return Gender.Female;
+        } else {
+            return Gender.Male;
+        }
     }
 
     protected static Double initTemperature() {
