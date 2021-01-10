@@ -1,5 +1,7 @@
 package net.etfbl.kovid.models;
 
+import net.etfbl.kovid.util.Generator;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -8,6 +10,7 @@ public class House implements Serializable {
     private Coord coord;
     private String uuid;
     private ArrayList<Person> residents;
+    private boolean containsAdult;
 
     public House(Coord coord, String uuid) {
         this.coord = coord;
@@ -15,7 +18,24 @@ public class House implements Serializable {
         this.residents = new ArrayList<Person>();
     }
 
+    public House(Coord coord) {
+        this.coord = coord;
+
+        this.uuid = Generator.generateUuid();
+        this.residents = new ArrayList<Person>();
+        this.containsAdult = false;
+    }
+
     public House() {
+
+    }
+
+    public boolean isContainsAdult() {
+        return containsAdult;
+    }
+
+    public void setContainsAdult(boolean containsAdult) {
+        this.containsAdult = containsAdult;
     }
 
     public Coord getCoord() {
